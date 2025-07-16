@@ -25,16 +25,21 @@ def retrieve_papers(state):
     return {**state, "papers": papers}
 
 def summarize_paper(state):
+    # increment retry count on each summarization attempt
+    retry_count = state.get("retry_count", 0) + 1
+    state["retry_count"] = retry_count
+    print(f"[summarize_paper] Retry count: {retry_count}")
+
     papers = state.get("papers", [])
     print("[summarize_paper] Received", len(papers), "papers")
 
     summaries = []
     for paper in papers:
         prompt = (
-        f"Summarize the following research abstract in exactly 3 THIRD-PERSON sentences without repetition. "
-        f"Underscore the novelty of the work and its contribution to the field. "
-        f"Abstract: {paper['summary']}\n"
-        f"Summary ends here."
+            f"Summarize the following research abstract in exactly 3 THIRD-PERSON sentences without repetition. "
+            f"Underscore the novelty of the work and its contribution to the field. "
+            f"Abstract: {paper['summary']}\n"
+            f"Summary ends here."
         )
         try:
             output = llm.invoke(prompt)
@@ -75,3 +80,24 @@ def compile_insights(state):
 
     print("[compile_insights] Final report:", report)
     return {**state, "report": report}
+
+def evaluate_summary_quality(state):
+    summaries = state.get("summaries", [])
+    retry_count = state.get("retry_count", 0)
+    print(f"[evaluate_summary_quality] Retry count: {retry_count}")
+
+    needs_retry = False
+    for s in summaries:
+        text = s.get("summary", "")
+        num_sentences = text.count('.')
+        num_words = len(text.split())
+        if num_sentences < 2 or num_words < 35:
+            needs_retry = True
+            break
+
+    if needs_retry and retry_count < 5:
+        print("[evaluate_summary_quality] Summary failed quality check. Retrying...")
+        state["route"] = "retry"
+    else:
+        state["route"] = "pass"
+    return state
