@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+langchain
+langgraph
+transformers
+torch
+requests
+feedparser
+pydantic
+redis
+python-dotenv
