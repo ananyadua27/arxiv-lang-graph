@@ -6,7 +6,7 @@
 
 ### Overview
 
-**arxiv-lang-graph** is an AI-driven pipeline designed for the extraction, synthesis, and analysis of academic preprints from arXiv.org. It showcases **agentic AI workflows** orchestrated through a graph-based engine (**LangGraph**), and enables multi-agent collaboration. The backend API, built with **FastAPI**, delivers high-performance, asynchronous REST endpoints tailored for integration with modern frontend/data pipelines.
+**arxiv-lang-graph** is an AI-driven pipeline designed for the extraction, synthesis, and analysis of academic preprints from arXiv.org. It showcases **agentic AI workflows** through a graph-based engine (**LangGraph**) and enables multi-agent collaboration. The backend API, built with **FastAPI**, delivers high-performance, asynchronous REST endpoints tailored for integration with modern frontend/data pipelines.
 
 This project highlights experience with:
 
