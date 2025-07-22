@@ -6,13 +6,13 @@
 
 ### Overview
 
-**arxiv-lang-graph** is an AI-driven pipeline designed for dynamic extraction, synthesis, and analysis of academic preprints from arXiv.org. It showcases **agentic AI workflows** orchestrated through a graph-based engine (**LangGraph**), enabling modular, extensible, and scalable multi-agent collaboration. The backend API, built with **FastAPI**, delivers high-performance, asynchronous REST endpoints tailored for integration with modern frontend and data pipelines.
+**arxiv-lang-graph** is an AI-driven pipeline designed for the extraction, synthesis, and analysis of academic preprints from arXiv.org. It showcases **agentic AI workflows** orchestrated through a graph-based engine (**LangGraph**), and enables multi-agent collaboration. The backend API, built with **FastAPI**, delivers high-performance, asynchronous REST endpoints tailored for integration with modern frontend/data pipelines.
 
 This project highlights experience with:
 
-- Architecting distributed, agent-driven systems with complex dependency graphs.
-- Leveraging transformer-based NLP models for abstractive summarization.
-- Implementing session persistence and state management via Redis for robust multi-turn conversational workflows.
+- Creating distributed, agent-driven systems with complex dependency graphs.
+- Utilizing transformer-based NLP models for abstractive summarization.
+- Implementing session persistence and state management via Redis for multi-turn conversational workflows.
 - Designing clean API interfaces with asynchronous Python programming patterns.
 
 ---
@@ -27,7 +27,7 @@ Efficiently accepts user queries, performs intelligent retrieval, and supports r
 
 #### Results Display
 
-Presents summarized, structured, and actionable information with embedded links for quick exploration.
+Presents structured and actionable information with embedded links for quick exploration.
 
 ![Results](./results.png)
 
@@ -36,21 +36,20 @@ Presents summarized, structured, and actionable information with embedded links 
 ## Core Features
 
 - **ArXiv Query Module**: Implements domain-specific search with customizable filtering and pagination over the arXiv API using **feedparser**.
-- **Multi-Agent Workflow Execution**: Sequential and conditional orchestration of agents via **LangGraph**, enabling complex reasoning pipelines without rigid (linear) control flow, such as in LangChain.
+- **Multi-Agent Workflow Execution**: Sequential and conditional orchestration of agents via **LangGraph**, allowing for complex reasoning pipelines without rigid (linear) control flows.
 - **Abstractive Summarization**: Integrates Hugging Face’s `google/flan-t5-base` transformer model fine-tuned for academic text to generate concise, 3-sentence summaries.
-- **Stateful Session Management**: Uses **Redis** as a fast, in-memory data store to maintain user context and session state for multi-turn dialogue or iterative queries.
-- **Extensible API Endpoints**: Asynchronous RESTful endpoints using **FastAPI** supporting JSON payloads and markdown-compatible outputs for easy UI rendering and consumption.
+- **Stateful Session Management**: Uses **Redis** as an in-memory data store to maintain user context and session state for iterative queries.
+- **Extensible API Endpoints**: Asynchronous RESTful endpoints using **FastAPI** supporting JSON payloads.
 - **Configurable LLM Backend**: Switchable between local Hugging Face models and OpenAI GPT APIs via environment configuration to optimize for model capabilities.
 
 ---
 
 ## Agentic AI & LangGraph Architecture
 
-The system exemplifies **agentic AI** where autonomous agents communicate and cooperate through explicit execution graphs:
+The system showcases **agentic AI** where autonomous agents communicate and cooperate through execution graphs:
 
 - **LangGraph** functions as a declarative workflow engine where agents are nodes and edges represent data/control dependencies.
 - Enables **non-linear execution paths** with **conditional branching** and **retry loops**, allowing iterative refinement without hardcoding control logic.
-- Supports **modularity and scalability** for future features like temporal trend detection or enhanced reasoning loops.
 
 ### Workflow & Retry Structure
 
@@ -64,16 +63,18 @@ The multi-agent pipeline is orchestrated through LangGraph with the following lo
 
 This conditional routing is configured in LangGraph as:
 
+```bash
 workflow.add_conditional_edges("evaluator", {
 "retry": "summarizer",
 "pass": "compiler"
 })
+```
 
 Each agent function returns a state dictionary including a `"route"` key to signal the next path:
 
+```bash
 return {**state, "route": "retry"} # or "pass"
-
-This design allows **dynamic, state-driven control flow** in the graph, enabling robust error handling and iterative improvement of AI outputs without branching code.
+```
 
 ---
 
@@ -105,8 +106,8 @@ This design allows **dynamic, state-driven control flow** in the graph, enabling
 ## Setup & Installation
 
 - Clone repository:  
-  `git clone https://github.com/yourusername/lang-graph.git`  
-  `cd lang-graph`
+  `git clone https://github.com/ananyadua27/arxiv-lang-graph.git`  
+  `cd arxiv-lang-graph`
 
 - Setup virtual environment and activate:  
   `python -m venv venv`  
@@ -126,24 +127,14 @@ This design allows **dynamic, state-driven control flow** in the graph, enabling
 
 ### Extensibility & Customization
 
-- **Model Backend Switching**: Abstracted LLM interface allows plugging in different transformer models or OpenAI GPT engines with minimal code changes.
+- **Model Backend Switching**: Abstracted LLM interface allows different plug-in transformer models or OpenAI GPT engines with minimal code changes.
 - **Workflow Expansion**: LangGraph workflows can be extended to add additional agents for trend forecasting, or multi-modal data analysis.
-
----
-
-## Engineering Considerations
-
-- Adopted **asynchronous programming** with `asyncio` and FastAPI for improved scalability under concurrent requests.
-- Maintained **clean separation of concerns** between data fetching, NLP processing, and API presentation layers.
-- Leveraged **container-friendly** design for easy Dockerization and cloud deployment.
-- Included comprehensive **logging and error handling** to ensure reliability in production environments.
 
 ---
 
 ## Notes
 
 - The project prioritizes **local inference** using Hugging Face models to avoid API rate limits and reduce costs but can be adapted to OpenAI’s API by updating configuration.
-- LangGraph’s conditional edges and dynamic routing enable **non-linear workflows with retry loops**, supporting robust, agentic AI orchestration.
 
 ---
 
